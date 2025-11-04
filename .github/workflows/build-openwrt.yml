@@ -77,7 +77,14 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
+        
+    - name: Fix missing en8811h-firmware dependency
+      run: |
+        cd openwrt
+        sed -i '/en8811h-firmware/d' package/kernel/linux/Makefile
+        grep -v en8811h-firmware .config > tmp && mv tmp .config
+        make defconfig
+        
     - name: Download package
       id: package
       run: |
